@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: board
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: board
+  template:
+    metadata:
+      labels:
+        app: board
+    spec:
+      containers:
+        - name: order
+          image: 590183823453.dkr.ecr.ap-northeast-2.amazonaws.com/order:2.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+        - name: 접속통계
+          image: 590183823453.dkr.ecr.ap-northeast-2.amazonaws.com/payemnt:1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: board
+spec:
+  selector:
+    app: board
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: LoadBalancer
